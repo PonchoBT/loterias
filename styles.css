@@ -1,0 +1,56 @@
+#tableros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tablero {
+    width: 400px;
+    height: 600px;
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Crear tres columnas */
+    gap: 5px;
+    padding: 5px;
+}
+
+.carta {
+    width: 100%;
+    /* Ajustar al tamaño de la columna */
+    height: auto;
+    /* Mantener proporción */
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+        /* Ocultar todo excepto el área de tableros */
+    }
+
+    #tableros,
+    #tableros * {
+        visibility: visible;
+        /* Hacer visibles los tableros y sus contenidos */
+    }
+
+    #tableros {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    button {
+        display: none;
+        /* Ocultar botones durante la impresión */
+    }
+}
+
+
+footer.footer.bg-light.mt-4.py-3 {
+    display: block;
+    bottom: 0 !important;
+    width: 100%;
+}

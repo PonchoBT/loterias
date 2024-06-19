@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lotería con Tableras</title>
+    <!-- Inclusión de Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-3">Lotería con Tableras</h1>
+        <form id="uploadForm" class="mb-3">
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="imageInput" accept="image/*" multiple>
+                <label class="custom-file-label" for="imageInput">Elegir archivos</label>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="subirImagenes()">Cargar Imágenes</button>
+        </form>
+        <button class="btn btn-success" onclick="generarTableras()">Generar Tableras</button>
+        <div id="tableros" class="mt-4">
+            <!-- Aquí se generan las tableras de manera dinámica -->
+        </div>
+        <button class="btn btn-info" onclick="imprimirTableros()">Imprimir Tableros</button>
+    </div>
+    <footer class="footer bg-light mt-4 py-3">
+        <div class="container text-center">
+            <span class="text-muted">Todos los derechos reservados © 2024 DeafTech</span>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
