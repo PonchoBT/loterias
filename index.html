@@ -1,29 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Lotería con Tableras</title>
+    <title>Lotería con tableros</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="script.js"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="text-center">
-            <h1 class="mt-5 mb-4 text-primary">Lotería con Tableras</h1>
+            <h1 class="mt-5 mb-4 text-primary">Lotería con tableros</h1>
             <p class="lead mb-4">Crea y personaliza tus propias tableras de lotería</p>
         </div>
-        
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <form id="uploadForm" class="mb-4">
                             <div class="custom-file mb-3">
-                                <input type="file" class="custom-file-input" id="imageInput" accept="image/*" multiple>
-                                <label class="custom-file-label" for="imageInput">
-                                    <i class="fas fa-images mr-2"></i>Seleccionar imágenes para las cartas
+                                <input type="file" class="custom-file-input" id="imageInput" accept="image/*" multiple
+                                    style="width: 0.1px; 
+                                              height: 0.1px; 
+                                              opacity: 0; 
+                                              overflow: hidden; 
+                                              position: absolute; 
+                                              z-index: -1;">
+                                <label for="imageInput" style="width: 100%;
+                                              padding: 12px 20px;
+                                              border-radius: 8px;
+                                              border: 2px dashed #3498db;
+                                              background: #f8f9fa;
+                                              transition: all 0.3s ease;
+                                              cursor: pointer;
+                                              display: flex;
+                                              align-items: center;
+                                              justify-content: center;
+                                              font-weight: 500;">
+                                    <i class="fas fa-images"
+                                        style="color: #3498db; font-size: 1.2em; margin-right: 10px;"></i>
+                                    <span style="color: #2c3e50;">Seleccionar imágenes</span>
                                 </label>
                             </div>
                             <div class="form-text text-muted mb-2">
@@ -34,29 +54,33 @@
                                 <i class="fas fa-upload mr-2"></i> Subir Imágenes
                             </button>
                         </form>
-                        
+
                         <div class="alert alert-info mb-3" role="alert">
-                            <i class="fas fa-info-circle mr-2"></i> Cada tablera tendrá 9 imágenes distribuidas aleatoriamente.
+                            <i class="fas fa-info-circle mr-2"></i> Cada tablera tendrá 9 imágenes distribuidas
+                            aleatoriamente.
                         </div>
-                        
+
                         <button class="btn btn-success btn-lg btn-block mb-3" onclick="generarTableras()">
                             <i class="fas fa-dice mr-2"></i> Crear Tableras Aleatorias
                         </button>
-                        
+
                         <div id="tableros" class="mt-4 border rounded p-3 bg-light">
                             <div class="text-center text-muted">
                                 <i class="fas fa-table fa-2x mb-2"></i>
-                                <p>Las tableras generadas aparecerán aquí</p>
+                                <p>Las tableros generadas aparecerán aquí</p>
                             </div>
                         </div>
-                        
+
                         <!-- Botones flotantes fijos en la esquina inferior derecha -->
                         <div class="floating-buttons">
                             <button onclick="generarTableras()" class="btn btn-primary btn-lg mb-2">
                                 <i class="fas fa-sync-alt"></i> Regenerar Tableras
                             </button>
-                            <button onclick="imprimirTableros()" class="btn btn-success btn-lg">
+                            <button onclick="imprimirTableros()" class="btn btn-success btn-lg mb-2">
                                 <i class="fas fa-print"></i> Imprimir Tableras
+                            </button>
+                            <button onclick="volverACargar()" class="btn btn-info btn-lg">
+                                <i class="fas fa-plus"></i> Nuevo
                             </button>
                         </div>
                     </div>
@@ -65,4 +89,5 @@
         </div>
     </div>
 </body>
+
 </html>

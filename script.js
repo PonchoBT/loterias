@@ -194,6 +194,7 @@ async function imprimirTableros() {
                         background: white;
                         margin: auto;
                         page-break-inside: avoid !important;
+                        align-content: space-around;
                     }
                     .carta {
                         aspect-ratio: 1;
@@ -398,4 +399,17 @@ function convertirImagenADataURL(img) {
         ctx.drawImage(img, 0, 0);
         resolve(canvas.toDataURL('image/jpeg', 1.0));
     });
+}
+
+function volverACargar() {
+    // Limpiar las imágenes cargadas
+    document.getElementById('imageInput').value = '';
+    
+    // Limpiar el contenedor de tableros
+    document.getElementById('tableros').innerHTML = `
+        <div class="text-center text-muted">
+            <i class="fas fa-table fa-2x mb-2"></i>
+            <p>Las tableros generadas aparecerán aquí</p>
+        </div>
+    `;
 }
