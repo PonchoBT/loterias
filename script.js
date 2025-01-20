@@ -49,7 +49,7 @@ function validarImagenes() {
         return false;
     }
 
-    mostrarModal('¡Imágenes seleccionadas! Haz clic en "Subir Imágenes" para continuar', 'success');
+    mostrarModal('¡Imágenes seleccionadas! Haz clic en "Generar" para continuar', 'success');
     return true;
 }
 
@@ -402,26 +402,19 @@ function convertirImagenADataURL(img) {
 }
 
 function volverACargar() {
-    // Limpiar las imágenes cargadas
     document.getElementById('imageInput').value = '';
-    
-    // Limpiar el contenedor de tableros
     document.getElementById('tableros').innerHTML = `
         <div class="text-center text-muted">
             <i class="fas fa-table fa-2x mb-2"></i>
-            <p>Las tableros generadas aparecerán aquí</p>
+            <p>Los tableros generados aparecerán aquí</p>
         </div>
     `;
-
-    // Resetear el texto del label de selección de imágenes
     document.getElementById('labelImagenes').innerHTML = 'Seleccionar imágenes';
     
-    // Resetear el estilo del label
     const labelContainer = document.querySelector('label[for="imageInput"]');
     labelContainer.style.borderColor = '#3498db';
     labelContainer.style.background = '#f8f9fa';
 
-    // Limpiar el caché de la página
     window.location.reload(true);
 }
 
@@ -432,7 +425,6 @@ function mostrarCantidadImagenes() {
     
     if (numArchivos > 0) {
         label.innerHTML = `${numArchivos} imágenes seleccionadas`;
-        
         if (numArchivos < 9) {
             label.innerHTML += ` (necesitas al menos 9)`;
         }
@@ -440,8 +432,11 @@ function mostrarCantidadImagenes() {
         label.innerHTML = 'Seleccionar imágenes';
     }
     
-    // Actualizar el estilo del label según la cantidad de imágenes
-    const labelContainer = label.parentElement;
+    actualizarEstiloLabel(numArchivos);
+}
+
+function actualizarEstiloLabel(numArchivos) {
+    const labelContainer = document.querySelector('label[for="imageInput"]');
     if (numArchivos >= 9) {
         labelContainer.style.borderColor = '#27ae60';
         labelContainer.style.background = '#f0fff4';
