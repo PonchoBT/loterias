@@ -12,45 +12,171 @@
     border: 1px solid black;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* Crear tres columnas */
     gap: 5px;
     padding: 5px;
+    background-color: #fff;
+    border-radius: 8px;
 }
 
 .carta {
     width: 100%;
-    /* Ajustar al tamaño de la columna */
-    height: auto;
-    /* Mantener proporción */
+    aspect-ratio: 1/1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    object-fit: cover;
 }
 
 @media print {
+    @page {
+        size: letter portrait;
+        margin: 1.2cm;
+    }
+
     body * {
         visibility: hidden;
-        /* Ocultar todo excepto el área de tableros */
     }
 
-    #tableros,
-    #tableros * {
+    .tablero-container, .tablero, .carta, .titulo-loteria {
         visibility: visible;
-        /* Hacer visibles los tableros y sus contenidos */
     }
 
-    #tableros {
-        position: absolute;
-        left: 0;
-        top: 0;
+    .tablero-container {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .tablero {
+        width: 18cm;
+        height: 22cm;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
     }
 
-    button {
-        display: none;
-        /* Ocultar botones durante la impresión */
+    .carta {
+        aspect-ratio: 1/1;
+        border: 1px solid #000;
     }
 }
 
-
 footer.footer.bg-light.mt-4.py-3 {
     display: block;
-    bottom: 0 !important;
     width: 100%;
+    bottom: 0;
+}
+
+.floating-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.floating-buttons button {
+    padding: 15px 30px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+/* Para dispositivos móviles */
+@media (max-width: 768px) {
+    .floating-buttons {
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .floating-buttons button {
+        padding: 12px 24px;
+    }
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px 0;
+    margin-top: 50px;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-text {
+    text-align: center;
+}
+
+.footer-text p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.heart {
+    color: #e74c3c;
+    animation: heartbeat 1.5s infinite;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+}
+
+.social-link {
+    color: white;
+    font-size: 20px;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.social-link:hover {
+    color: #3498db;
+    transform: translateY(-3px);
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Asegurarse de que el footer se mantenga abajo */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+}
+
+/* No mostrar en impresión */
+@media print {
+    .footer {
+        display: none;
+    }
 }
