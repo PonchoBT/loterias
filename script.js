@@ -412,4 +412,44 @@ function volverACargar() {
             <p>Las tableros generadas aparecerán aquí</p>
         </div>
     `;
+
+    // Resetear el texto del label de selección de imágenes
+    document.getElementById('labelImagenes').innerHTML = 'Seleccionar imágenes';
+    
+    // Resetear el estilo del label
+    const labelContainer = document.querySelector('label[for="imageInput"]');
+    labelContainer.style.borderColor = '#3498db';
+    labelContainer.style.background = '#f8f9fa';
+
+    // Limpiar el caché de la página
+    window.location.reload(true);
+}
+
+function mostrarCantidadImagenes() {
+    const input = document.getElementById('imageInput');
+    const label = document.getElementById('labelImagenes');
+    const numArchivos = input.files.length;
+    
+    if (numArchivos > 0) {
+        label.innerHTML = `${numArchivos} imágenes seleccionadas`;
+        
+        if (numArchivos < 9) {
+            label.innerHTML += ` (necesitas al menos 9)`;
+        }
+    } else {
+        label.innerHTML = 'Seleccionar imágenes';
+    }
+    
+    // Actualizar el estilo del label según la cantidad de imágenes
+    const labelContainer = label.parentElement;
+    if (numArchivos >= 9) {
+        labelContainer.style.borderColor = '#27ae60';
+        labelContainer.style.background = '#f0fff4';
+    } else if (numArchivos > 0) {
+        labelContainer.style.borderColor = '#f39c12';
+        labelContainer.style.background = '#fff9f0';
+    } else {
+        labelContainer.style.borderColor = '#3498db';
+        labelContainer.style.background = '#f8f9fa';
+    }
 }

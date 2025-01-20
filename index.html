@@ -26,6 +26,7 @@
                         <form id="uploadForm" class="mb-4">
                             <div class="custom-file mb-3">
                                 <input type="file" class="custom-file-input" id="imageInput" accept="image/*" multiple
+                                    onchange="mostrarCantidadImagenes()" 
                                     style="width: 0.1px; 
                                               height: 0.1px; 
                                               opacity: 0; 
@@ -45,7 +46,7 @@
                                               font-weight: 500;">
                                     <i class="fas fa-images"
                                         style="color: #3498db; font-size: 1.2em; margin-right: 10px;"></i>
-                                    <span style="color: #2c3e50;">Seleccionar imágenes</span>
+                                    <span id="labelImagenes" style="color: #2c3e50;">Seleccionar imágenes</span>
                                 </label>
                             </div>
                             <div class="form-text text-muted mb-2">
