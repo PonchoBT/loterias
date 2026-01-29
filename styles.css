@@ -164,7 +164,7 @@ footer.footer.bg-light.mt-4.py-3 {
     .floating-buttons {
         left: 12px;
         right: 12px;
-        bottom: 90px;
+        bottom: 50px;
         top: auto;
         flex-direction: row;
         flex-wrap: wrap;
