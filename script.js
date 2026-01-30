@@ -1,5 +1,27 @@
 let imagenesCargadas = [];
 
+function obtenerCantidadPorTablero() {
+    const select = document.getElementById('cantidadPorTablero');
+    const valor = parseInt(select?.value, 10);
+    return Number.isNaN(valor) ? 9 : valor;
+}
+
+function actualizarCantidadTablero() {
+    const cantidad = obtenerCantidadPorTablero();
+    const minimoSpan = document.getElementById('minimoImagenes');
+    const cantidadSpan = document.getElementById('cantidadImagenesTablero');
+
+    if (minimoSpan) {
+        minimoSpan.textContent = cantidad;
+    }
+
+    if (cantidadSpan) {
+        cantidadSpan.textContent = cantidad;
+    }
+
+    mostrarCantidadImagenes();
+}
+
 function mostrarModal(mensaje, tipo = 'info') {
     const modalAnterior = document.getElementById('mensajeModal');
     if (modalAnterior) {
@@ -39,13 +61,14 @@ function cerrarModal() {
 
 function validarImagenes() {
     const input = document.getElementById('imageInput');
+    const cantidadMinima = obtenerCantidadPorTablero();
     if (!input.files.length) {
         mostrarModal('Por favor, selecciona al menos una imagen', 'error');
         return false;
     }
     
-    if (input.files.length < 9) {
-        mostrarModal('Necesitas seleccionar al menos 9 imágenes', 'info');
+    if (input.files.length < cantidadMinima) {
+        mostrarModal(`Necesitas seleccionar al menos ${cantidadMinima} imágenes`, 'info');
         return false;
     }
 
@@ -55,14 +78,15 @@ function validarImagenes() {
 
 function subirImagenes() {
     const input = document.getElementById('imageInput');
+    const cantidadMinima = obtenerCantidadPorTablero();
     
     if (!input.files.length) {
         mostrarModal('Por favor, selecciona al menos una imagen', 'error');
         return;
     }
 
-    if (input.files.length < 9) {
-        mostrarModal('Necesitas seleccionar al menos 9 imágenes para crear las tableras', 'error');
+    if (input.files.length < cantidadMinima) {
+        mostrarModal(`Necesitas seleccionar al menos ${cantidadMinima} imágenes para crear las tableras`, 'error');
         return;
     }
 
@@ -79,14 +103,15 @@ function subirImagenes() {
 
 function generarTableras() {
     const input = document.getElementById('imageInput');
+    const cantidadPorTablero = obtenerCantidadPorTablero();
     
     if (!input.files.length) {
         mostrarModal('Primero debes subir imágenes', 'error');
         return;
     }
 
-    if (input.files.length < 9) {
-        mostrarModal('Necesitas al menos 9 imágenes para crear tableras', 'error');
+    if (input.files.length < cantidadPorTablero) {
+        mostrarModal(`Necesitas al menos ${cantidadPorTablero} imágenes para crear tableras`, 'error');
         return;
     }
 
@@ -98,44 +123,25 @@ function generarTableras() {
     for (let t = 0; t < 16; t++) {
         const imagenesAleatorias = [...imagenes]
             .sort(() => Math.random() - 0.5)
-            .slice(0, 9);
+            .slice(0, cantidadPorTablero);
 
         const tablero = document.createElement('div');
-        tablero.className = 'tablero';
-        tablero.style.cssText = `
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 2px solid #000;
-            border-radius: 10px;
-            background: white;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        `;
+        const columnas = (cantidadPorTablero === 16 || cantidadPorTablero === 12) ? 4 : 3;
+        const claseTamano = cantidadPorTablero === 16 ? 'tablero-16' : (cantidadPorTablero === 12 ? 'tablero-12' : 'tablero-9');
+        tablero.className = (cantidadPorTablero === 16 || cantidadPorTablero === 12)
+            ? `tablero tablero-4 ${claseTamano}`
+            : `tablero tablero-3 ${claseTamano}`;
+        tablero.dataset.cols = columnas;
+        tablero.dataset.size = cantidadPorTablero;
 
         // Agregar 9 imágenes aleatorias
         imagenesAleatorias.forEach(imagen => {
             const carta = document.createElement('div');
             carta.className = 'carta';
-            carta.style.cssText = `
-                aspect-ratio: 1;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                overflow: hidden;
-            `;
 
             const img = document.createElement('img');
             img.src = URL.createObjectURL(imagen);
-            img.style.cssText = `
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-            `;
+            img.className = 'carta-img';
 
             carta.appendChild(img);
             tablero.appendChild(carta);
@@ -154,23 +160,17 @@ async function imprimirTableros() {
         return;
     }
 
-    // Guardar el contenido original
-    const bodyContent = document.body.innerHTML;
-
     try {
-        // Crear el contenido para imprimir
-        let contenidoImprimir = `
+        // Obtener todos los tableros y procesarlos uno por uno
+        const tableros = tablerosContainer.getElementsByClassName('tablero');
+        const size = parseInt(tableros[0]?.dataset.size || '9', 10);
+
+        const contenidoImprimir9 = `
             <html>
             <head>
                 <style>
-                    @page {
-                        size: letter portrait;
-                        margin: 1.5cm;
-                    }
-                    body {
-                        margin: 0;
-                        padding: 0;
-                    }
+                    @page { size: letter portrait; margin: 1.5cm; }
+                    body { margin: 0; padding: 0; }
                     .tablero-pagina {
                         page-break-after: always !important;
                         height: 100vh;
@@ -179,16 +179,14 @@ async function imprimirTableros() {
                         justify-content: center;
                         padding: 0;
                     }
-                    .tablero-pagina:last-child {
-                        page-break-after: auto;
-                    }
+                    .tablero-pagina:last-child { page-break-after: auto; }
                     .tablero {
                         width: 18cm;
                         height: 22cm;
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
                         gap: 12px;
-                        padding: 20px;
+                        padding: 18px;
                         border: 2.5px solid #000;
                         border-radius: 10px;
                         background: white;
@@ -199,46 +197,122 @@ async function imprimirTableros() {
                     .carta {
                         aspect-ratio: 1;
                         border: 1px solid #ccc;
-                        border-radius: 5px;
+                        border-radius: 6px;
                         overflow: hidden;
                         background: white;
                     }
-                    .carta img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        display: block;
-                    }
+                    .carta img { width: 100%; height: 100%; object-fit: cover; display: block; }
                     @media print {
-                        html, body {
-                            height: 100%;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                        }
-                        .tablero-pagina {
-                            display: block !important;
-                            page-break-after: always !important;
-                            page-break-inside: avoid !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                        }
-                        .tablero {
-                            margin: 0 auto !important;
-                            page-break-inside: avoid !important;
-                        }
+                        html, body { height: 100%; margin: 0 !important; padding: 0 !important; }
+                        .tablero-pagina { display: block !important; page-break-after: always !important; page-break-inside: avoid !important; margin: 0 !important; padding: 0 !important; }
+                        .tablero { margin: 0 auto !important; page-break-inside: avoid !important; }
                     }
                 </style>
             </head>
             <body>`;
 
-        // Obtener todos los tableros y procesarlos uno por uno
-        const tableros = tablerosContainer.getElementsByClassName('tablero');
-        
-        // Agregar cada tablero en su propia página
-        Array.from(tableros).forEach((tablero, index) => {
+        const contenidoImprimir12 = `
+            <html>
+            <head>
+                <style>
+                    @page { size: letter portrait; margin: 1.5cm; }
+                    body { margin: 0; padding: 0; }
+                    .tablero-pagina {
+                        page-break-after: always !important;
+                        height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                    }
+                    .tablero-pagina:last-child { page-break-after: auto; }
+                    .tablero {
+                        width: 18cm;
+                        height: 22cm;
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 12px;
+                        padding: 16px;
+                        border: 2.5px solid #000;
+                        border-radius: 10px;
+                        background: white;
+                        margin: auto;
+                        page-break-inside: avoid !important;
+                        align-content: space-around;
+                    }
+                    .carta {
+                        aspect-ratio: 1;
+                        border: 1px solid #ccc;
+                        border-radius: 6px;
+                        overflow: hidden;
+                        background: white;
+                    }
+                    .carta img { width: 100%; height: 100%; object-fit: cover; display: block; }
+                    @media print {
+                        html, body { height: 100%; margin: 0 !important; padding: 0 !important; }
+                        .tablero-pagina { display: block !important; page-break-after: always !important; page-break-inside: avoid !important; margin: 0 !important; padding: 0 !important; }
+                        .tablero { margin: 0 auto !important; page-break-inside: avoid !important; }
+                    }
+                </style>
+            </head>
+            <body>`;
+
+        const contenidoImprimir16 = `
+            <html>
+            <head>
+                <style>
+                    @page { size: letter portrait; margin: 1.5cm; }
+                    body { margin: 0; padding: 0; }
+                    .tablero-pagina {
+                        page-break-after: always !important;
+                        height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                    }
+                    .tablero-pagina:last-child { page-break-after: auto; }
+                    .tablero {
+                        width: 18cm;
+                        height: 22cm;
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 6px;
+                        padding: 8px;
+                        border: 2.5px solid #000;
+                        border-radius: 10px;
+                        background: white;
+                        margin: auto;
+                        page-break-inside: avoid !important;
+                        align-content: stretch;
+                    }
+                    .carta {
+                        aspect-ratio: 1;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        overflow: hidden;
+                        background: white;
+                    }
+                    .carta img { width: 100%; height: 100%; object-fit: cover; display: block; }
+                    @media print {
+                        html, body { height: 100%; margin: 0 !important; padding: 0 !important; }
+                        .tablero-pagina { display: block !important; page-break-after: always !important; page-break-inside: avoid !important; margin: 0 !important; padding: 0 !important; }
+                        .tablero { margin: 0 auto !important; page-break-inside: avoid !important; }
+                    }
+                </style>
+            </head>
+            <body>`;
+
+        let contenidoImprimir = contenidoImprimir9;
+        if (size === 12) contenidoImprimir = contenidoImprimir12;
+        if (size === 16) contenidoImprimir = contenidoImprimir16;
+
+        const claseTablero = size === 9 ? 'tablero tablero-3 tablero-9' : `tablero tablero-4 tablero-${size}`;
+
+        Array.from(tableros).forEach((tablero) => {
             contenidoImprimir += `
                 <div class="tablero-pagina">
-                    <div class="tablero">
+                    <div class="${claseTablero}">
                         ${tablero.innerHTML}
                     </div>
                 </div>`;
@@ -387,6 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (imageInput) {
         imageInput.addEventListener('change', validarImagenes);
     }
+    actualizarCantidadTablero();
 });
 
 // Asegurarse de que las imágenes se carguen como data URLs
@@ -422,22 +497,23 @@ function mostrarCantidadImagenes() {
     const input = document.getElementById('imageInput');
     const label = document.getElementById('labelImagenes');
     const numArchivos = input.files.length;
+    const cantidadMinima = obtenerCantidadPorTablero();
     
     if (numArchivos > 0) {
         label.innerHTML = `${numArchivos} imágenes seleccionadas`;
-        if (numArchivos < 9) {
-            label.innerHTML += ` (necesitas al menos 9)`;
+        if (numArchivos < cantidadMinima) {
+            label.innerHTML += ` (necesitas al menos ${cantidadMinima})`;
         }
     } else {
         label.innerHTML = 'Seleccionar imágenes';
     }
     
-    actualizarEstiloLabel(numArchivos);
+    actualizarEstiloLabel(numArchivos, cantidadMinima);
 }
 
-function actualizarEstiloLabel(numArchivos) {
+function actualizarEstiloLabel(numArchivos, cantidadMinima) {
     const labelContainer = document.querySelector('label[for="imageInput"]');
-    if (numArchivos >= 9) {
+    if (numArchivos >= cantidadMinima) {
         labelContainer.style.borderColor = '#27ae60';
         labelContainer.style.background = '#f0fff4';
     } else if (numArchivos > 0) {

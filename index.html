@@ -21,7 +21,7 @@
     <meta property="og:image" content="img/lsmloteria.png">
     <meta property="og:image:alt" content="Lotería">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lotería en LSM">
+    <meta name="twitter:title" content="Lotería">
     <meta name="twitter:description" content="Crea y personaliza tus tableros de lotería.">
     <meta name="twitter:image" content="img/lsmloteria.png">
     <meta name="twitter:image:alt" content="Lotería">
@@ -43,7 +43,8 @@
         <div class="alert alert-info shadow-sm">
             <h5 class="mb-2"><i class="fas fa-info-circle mr-2"></i>¿Cómo usar?</h5>
             <ol class="mb-0 pl-3">
-                <li>Selecciona al menos 9 imágenes.</li>
+                <li>Elige cuántas imágenes tendrá cada tablero (9, 12 o 16).</li>
+                <li>Selecciona al menos la misma cantidad de imágenes.</li>
                 <li>Haz clic en <strong>Subir Imágenes</strong>.</li>
                 <li>Presiona <strong>Crear Tableros Aleatorios</strong> para generar 16 tableros.</li>
                 <li>Usa <strong>Imprimir Tableros</strong> para imprimirlos.</li>
@@ -81,9 +82,17 @@
                                     <span id="labelImagenes" style="color: #2c3e50;">Seleccionar imágenes</span>
                                 </label>
                             </div>
+                            <div class="mb-3">
+                                <label for="cantidadPorTablero" class="form-label">Imágenes por tablero</label>
+                                <select id="cantidadPorTablero" class="form-select" onchange="actualizarCantidadTablero()">
+                                    <option value="9" selected>9 imágenes (3x3)</option>
+                                    <option value="12">12 imágenes (3x4)</option>
+                                    <option value="16">16 imágenes (4x4)</option>
+                                </select>
+                            </div>
                             <div class="form-text text-muted mb-2">
                                 <i class="fas fa-info-circle mr-2"></i>
-                                Selecciona las imágenes que deseas usar en tus tableros (mínimo 9 imágenes)
+                                Selecciona las imágenes que deseas usar en tus tableros (mínimo <span id="minimoImagenes">9</span> imágenes)
                             </div>
                             <button type="button" class="btn btn-primary btn-lg btn-block" onclick="subirImagenes()">
                                 <i class="fas fa-upload mr-2"></i> Subir Imágenes
@@ -91,8 +100,8 @@
                         </form>
 
                         <div class="form-text text-muted mb-2">
-                            <i class="fas fa-info-circle mr-2"></i> Cada tablero tendrá 9 imágenes distribuidas
-                            aleatoriamente.
+                            <i class="fas fa-info-circle mr-2"></i> Cada tablero tendrá <span id="cantidadImagenesTablero">9</span>
+                            imágenes distribuidas aleatoriamente.
                         </div>
 
                         <button class="btn btn-success btn-lg btn-block mb-3" onclick="generarTableras()">
